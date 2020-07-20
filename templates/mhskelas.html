@@ -1,0 +1,82 @@
+{% extends 'index.html' %}
+{% block title %} Absensi Kelas - JTIK E-Presence {% endblock %}
+{% block content %}
+
+<div class="header bg-primary pb-6">
+  <div class="container-fluid">
+    <div class="header-body">
+      <div class="row align-items-center pt-5 pb-4">
+        <div class="col-lg-12">
+          <h6 class="h2 text-white d-inline-block mb-2">Absensi Kelas {{kelas}}</h6>
+          <p class="h2 text-white form-inline"><small>
+            Tanggal : <input id="short_date" style="width: 100;" class="form-control form-control-sm datepicker" data-date-format="dd/mm/yyyy" type="text" value="{{tgl}}">
+          </small></p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="satu" class="container-fluid mt--6">
+  <div class="row">
+    <div class="col">
+      <div class="card">
+        <!-- Card header -->
+        <div class="card-header border-0">
+          <div class="float-right">
+            <a href="/download?kelas={{kelas}}&tgl={{tgl}}" class="btn btn-sm btn-default">Download Excel</a>
+          </div>
+          <h3 class="mb-0">Data mahasiswa</h3>
+        </div>
+        <!-- Light table -->
+        <div class="table-responsive">
+          <table class="table align-items-center table-flush">
+            <thead class="thead-light">
+              <tr>
+                <th scope="col" class="sort text-center" data-sort="name">Nama</th>
+                <th scope="col" class="sort text-center" data-sort="name">Nim</th>
+                <th scope="col" class="sort text-center" data-sort="name">J1</th>
+                <th scope="col" class="sort text-center" data-sort="name">J2</th>
+                <th scope="col" class="sort text-center" data-sort="name">J3</th>
+                <th scope="col" class="sort text-center" data-sort="name">J4</th>
+                <th scope="col" class="sort text-center" data-sort="name">J5</th>
+              </tr>
+            </thead>
+            <tbody class="list">
+              {% for row in mhs : %}
+              <tr>
+                <td class="text-center">{{row['nama']}}</td>
+                <td class="text-center">{{row['nim']}}</td>
+                <td class="text-center">{{row['j1']}}</td>
+                <td class="text-center">{{row['j2']}}</td>
+                <td class="text-center">{{row['j3']}}</td>
+                <td class="text-center">{{row['j4']}}</td>
+                <td class="text-center">{{row['j5']}}</td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    <script>
+      (function($){
+        $(function(){
+
+          $('#short_date').datepicker({
+            format: 'mm/dd/yy',
+            autoclose: true,
+            todayHighlight: true,
+          })
+             .on("input change", function (e) {
+               window.location = `/kelas/{{idk}}?tgl=${e.target.value}`;
+          });
+
+        });
+      })(jQuery);
+    </script>
+
+{% endblock %}

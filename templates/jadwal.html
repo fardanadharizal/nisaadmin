@@ -1,0 +1,266 @@
+{% extends 'index.html' %}
+{% block title %}Jadwal - E-Presence {% endblock %}
+{% block content %}
+
+        <div class="header bg-primary pb-6">
+          <div class="container-fluid">
+            <div class="header-body">
+              <div class="row align-items-center pt-5 pb-4">
+                <div class="col-lg-12">
+                  <h6 class="h2 text-white d-inline-block mb-2">Jadwal Mata Kuliah</h6>
+                  <p class="h2 text-white"><small>
+                    Data seluruh jadwal mata kuliah di JTIK Politeknik Negeri Jakarta
+                  </small></p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {% if mt: %}
+        <div class="container-fluid mt--6">
+          <div class="row">
+            <div class="col">
+              <div class="card">
+                <!-- Card header -->
+                <div class="card-header border-0">
+                  <h3 class="mb-0">Ubah Data Jadwal : </h3>
+                </div>
+                <div class="card-body">
+                  <form role="form" action="/jadwal" method="POST">
+                    <input type="text" name="inputMt" value="update" hidden>
+                    <input type="text" name="inputId" value="{{id}}" hidden>
+                    <div class="row">
+                      <div class="col-lg-12">
+                        <div class="form-group">
+                          <label class="form-control-label">Prodi | Kelas</label>
+                          <select class="form-control" name="inputKelas" required>
+                            {% for row in kelas: %}
+                            <option value="{{row['prodi']}}, {{row['kelas']}}">{{row['prodi']}} | {{row['kelas']}}</option>
+                            {% endfor %}
+                          </select>
+                        </div>
+                      </div>
+                      <div class="col-lg-6">
+                        <div class="form-group">
+                          <label class="form-control-label">Hari</label>
+                          <select class="form-control" name="inputHari" required>
+                            <option value='senin'>senin</option>
+                            <option value='selasa'>selasa</option>
+                            <option value='rabu'>rabu</option>
+                            <option value='kamis'>kamis</option>
+                            <option value='jumat'>jumat</option>
+                            <option value='sabtu'>sabtu</option>
+                          </select>
+                        </div>
+                      </div>
+                      <div class="col-lg-6">
+                        <div class="form-group">
+                          <label class="form-control-label">Jam Ke</label>
+                          <select class="form-control" name="inputJam" required>
+                            <option value='1'>1</option>
+                            <option value='2'>2</option>
+                            <option value='3'>3</option>
+                            <option value='4'>4</option>
+                            <option value='5'>5</option>
+                          </select>
+                        </div>
+                      </div>
+                      <div class="col-lg-12">
+                        <div class="form-group">
+                          <label class="form-control-label">Mata Kuliah | Kode | Dosen</label>
+                          <select class="form-control" name="inputMatkul" required>
+                            {% for row in matkul: %}
+                            <option value="{{row['matkul']}}, {{row['kode']}}, {{row['dosen']}}, {{row['id_dosen']}}">{{row['matkul']}} | {{row['kode']}} | {{row['dosen']}}</option>
+                            {% endfor %}
+                          </select>
+                        </div>
+                      </div>
+                      <div class="col-lg-6">
+                        <div class="form-group">
+                          <label class="form-control-label">Jam Mulai</label>
+                          <input class="form-control" type="time" name="mulai" required>
+                        </div>
+                      </div>
+                      <div class="col-lg-6">
+                        <div class="form-group">
+                          <label class="form-control-label">Jam Selesai</label>
+                          <input class="form-control" type="time" name="selesai" required>
+                        </div>
+                      </div>
+                      <div class="col-lg-6">
+                        <div class="form-group">
+                          <label class="form-control-label">Ruang</label>
+                          <input class="form-control" type="text" name="ruang" required>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="mt-4">
+                      <button type="submit" id="btn-2" class="btn btn-primary">Ubah Data</button>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        {% else %}
+        <div id="satu" class="container-fluid mt--6">
+          <div class="row">
+            <div class="col">
+              <div class="card">
+                <!-- Card header -->
+                <div class="card-header border-0">
+                  {% if session['level'] == 'admin' :%}
+                  <a class="btn btn-sm btn-default float-right text-white" id="btn-1">
+                    Tambah Data +
+                  </a>
+                  {% endif %}
+                  <h3 class="mb-0">Jadwal mata kuliah</h3>
+                </div>
+                <!-- Light table -->
+                <div class="table-responsive">
+                  <table class="table align-items-center table-flush">
+                    <thead class="thead-light">
+                      <tr>
+                        <th scope="col" class="sort text-center" data-sort="name">Kelas</th>
+                        <th scope="col" class="sort text-center" data-sort="name">Hari</th>
+                        <th scope="col" class="sort text-center" data-sort="name">Matkul</th>
+                        <th scope="col" class="sort text-center" data-sort="name">Kode</th>
+                        <th scope="col" class="sort text-center" data-sort="name">Ruang</th>
+                        <th scope="col" class="sort text-center" data-sort="name">Dosen</th>
+                        <th scope="col" class="sort text-center" data-sort="name">Mulai</th>
+                        <th scope="col" class="sort text-center" data-sort="name">Selesai</th>
+                        {% if session['level'] == 'admin' :%}
+                        <th scope="col"></th>
+                        {% endif %}
+                      </tr>
+                    </thead>
+                    <tbody class="list">
+                      {% for row in jadwal : %}
+                      <tr>
+                        <td class="text-center">{{row['kelas']}}</td>
+                        <td class="text-center">{{row['hari']}}</td>
+                        <td class="text-center">{{row['matkul']}}</td>
+                        <td class="text-center">{{row['kode']}}</td>
+                        <td class="text-center">{{row['ruang']}}</td>
+                        <td class="text-center">{{row['dosen']}}</td>
+                        <td class="text-center">{{row['start']}}</td>
+                        <td class="text-center">{{row['stop']}}</td>
+                        {% if session['level'] == 'admin' :%}
+                        <td class="text-right">
+                          <a href="/jadwal?mt=update&id={{row['id']}}" class="btn btn-info btn-sm text-white"><i class="fi fi-spinner-refresh"></i></a>
+                          <a href="/delete/jadwal/{{row['id']}}" class="btn btn-danger btn-sm"><i class="fi fi-close-a"></i></a>
+                        </td>
+                        {% endif %}
+                      </tr>
+                      {% endfor %}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div id="dua" class="d-none">
+          <div class="row">
+            <div class="col">
+              <div class="card">
+                <!-- Card header -->
+                <div class="card-header border-0">
+                  <h3 class="mb-0">Tambahkan Data Mata Kuliah : </h3>
+                </div>
+                <div class="card-body">
+                  <form role="form" action="/jadwal" method="POST">
+                    <input type="text" name="inputMt" value="create" hidden>
+                    <div class="row">
+                      <div class="col-lg-12">
+                        <div class="form-group">
+                          <label class="form-control-label">Prodi | Kelas</label>
+                          <select class="form-control" name="inputKelas" required>
+                            {% for row in kelas: %}
+                            <option value="{{row['prodi']}}, {{row['kelas']}}">{{row['prodi']}} | {{row['kelas']}}</option>
+                            {% endfor %}
+                          </select>
+                        </div>
+                      </div>
+                      <div class="col-lg-6">
+                        <div class="form-group">
+                          <label class="form-control-label">Hari</label>
+                          <select class="form-control" name="inputHari" required>
+                            <option value='senin'>senin</option>
+                            <option value='selasa'>selasa</option>
+                            <option value='rabu'>rabu</option>
+                            <option value='kamis'>kamis</option>
+                            <option value='jumat'>jumat</option>
+                            <option value='sabtu'>sabtu</option>
+                          </select>
+                        </div>
+                      </div>
+                      <div class="col-lg-6">
+                        <div class="form-group">
+                          <label class="form-control-label">Jam Ke</label>
+                          <select class="form-control" name="inputJam" required>
+                            <option value='1'>1</option>
+                            <option value='2'>2</option>
+                            <option value='3'>3</option>
+                            <option value='4'>4</option>
+                            <option value='5'>5</option>
+                          </select>
+                        </div>
+                      </div>
+                      <div class="col-lg-12">
+                        <div class="form-group">
+                          <label class="form-control-label">Mata Kuliah | Kode | Dosen</label>
+                          <select class="form-control" name="inputMatkul" required>
+                            {% for row in matkul: %}
+                            <option value="{{row['matkul']}}, {{row['kode']}}, {{row['dosen']}}, {{row['id_dosen']}}">{{row['matkul']}} | {{row['kode']}} | {{row['dosen']}}</option>
+                            {% endfor %}
+                          </select>
+                        </div>
+                      </div>
+                      <div class="col-lg-6">
+                        <div class="form-group">
+                          <label class="form-control-label">Jam Mulai</label>
+                          <input class="form-control" type="time" name="mulai" required>
+                        </div>
+                      </div>
+                      <div class="col-lg-6">
+                        <div class="form-group">
+                          <label class="form-control-label">Jam Selesai</label>
+                          <input class="form-control" type="time" name="selesai" required>
+                        </div>
+                      </div>
+                      <div class="col-lg-6">
+                        <div class="form-group">
+                          <label class="form-control-label">Ruang</label>
+                          <input class="form-control" type="text" name="ruang" required>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="mt-4">
+                      <button type="submit" id="btn-2" class="btn btn-primary">Tambahkan Data +</button>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        {% endif %}
+
+      <script>
+      (function($){
+        $(function(){
+
+          $("#btn-1").on("click", function(event) {
+            $('#satu').attr('class', 'd-none');
+            $('#dua').attr('class', 'container-fluid mt--6');
+          });
+
+        });
+      })(jQuery);
+    </script>
+
+{% endblock %}

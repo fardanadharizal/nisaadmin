@@ -1,0 +1,168 @@
+{% extends 'index.html' %}
+{% block title %}Matkul - E-Presence {% endblock %}
+{% block content %}
+
+        <div class="header bg-primary pb-6">
+          <div class="container-fluid">
+            <div class="header-body">
+              <div class="row align-items-center pt-5 pb-4">
+                <div class="col-lg-12">
+                  <h6 class="h2 text-white d-inline-block mb-2">Data Mata Kuliah</h6>
+                  <p class="h2 text-white"><small>
+                    Data seluruh mata kuliah di JTIK Politeknik Negeri Jakarta
+                  </small></p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {% if mt: %}
+        <div class="container-fluid mt--6">
+          <div class="row">
+            <div class="col">
+              <div class="card">
+                <!-- Card header -->
+                <div class="card-header border-0">
+                  <h3 class="mb-0">Ubah Data Mata Kuliah : </h3>
+                </div>
+                <div class="card-body">
+                  <form role="form" action="/matkul" method="POST">
+                    <input type="text" name="inputMt" value="update" hidden>
+                    <input type="text" name="inputId" value="{{id}}" hidden>
+                    <div class="row">
+                      <div class="col-lg-6">
+                        <div class="form-group">
+                          <label class="form-control-label">Dosen</label>
+                          <select class="form-control" name="inputDosen" required>
+                            {% for row in dosen: %}
+                            <option value="{{row['id']}}, {{row['nama']}}">{{row['nama']}}</option>
+                            {% endfor %}
+                          </select>
+                        </div>
+                      </div>
+                      <div class="col-lg-6">
+                        <div class="form-group">
+                          <label class="form-control-label">Mata Kuliah</label>
+                          <input type="text" name="inputMatkul" class="form-control" value="{{matkul}}" required>
+                        </div>
+                      </div>
+                      <div class="col-lg-6">
+                        <div class="form-group">
+                          <label class="form-control-label">Kode</label>
+                          <input type="text" name="inputKode" class="form-control" value="{{kode}}" required>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="mt-4">
+                      <button type="submit" id="btn-2" class="btn btn-primary">Ubah Data</button>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        {% else %}
+        <div id="satu" class="container-fluid mt--6">
+          <div class="row">
+            <div class="col">
+              <div class="card">
+                <!-- Card header -->
+                <div class="card-header border-0">
+                  <a class="btn btn-sm btn-default float-right text-white" id="btn-1">
+                    Tambah Data +
+                  </a>
+                  <h3 class="mb-0">Data mata kuliah</h3>
+                </div>
+                <!-- Light table -->
+                <div class="table-responsive">
+                  <table class="table align-items-center table-flush">
+                    <thead class="thead-light">
+                      <tr>
+                        <th scope="col" class="sort text-center" data-sort="name">Matkul</th>
+                        <th scope="col" class="sort text-center" data-sort="name">Kode</th>
+                        <th scope="col" class="sort text-center" data-sort="name">Dosen</th>
+                        <th scope="col"></th>
+                      </tr>
+                    </thead>
+                    <tbody class="list">
+                      {% for row in matkul : %}
+                      <tr>
+                        <td class="text-center">{{row['matkul']}}</td>
+                        <td class="text-center">{{row['kode']}}</td>
+                        <td class="text-center">{{row['dosen']}}</td>
+                        <td class="text-right">
+                          <a href="/matkul?mt=update&id={{row['id']}}" class="btn btn-info btn-sm text-white"><i class="fi fi-spinner-refresh"></i></a>
+                          <a href="/delete/matkul/{{row['id']}}" class="btn btn-danger btn-sm"><i class="fi fi-close-a"></i></a>
+                        </td>
+                      </tr>
+                      {% endfor %}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div id="dua" class="d-none">
+          <div class="row">
+            <div class="col">
+              <div class="card">
+                <!-- Card header -->
+                <div class="card-header border-0">
+                  <h3 class="mb-0">Tambahkan Data Mata Kuliah : </h3>
+                </div>
+                <div class="card-body">
+                  <form role="form" action="/matkul" method="POST">
+                    <input type="text" name="inputMt" value="create" hidden>
+                    <div class="row">
+                      <div class="col-lg-6">
+                        <div class="form-group">
+                          <label class="form-control-label">Dosen</label>
+                          <select class="form-control" name="inputDosen" required>
+                            {% for row in dosen: %}
+                            <option value="{{row['id']}}, {{row['nama']}}">{{row['nama']}}</option>
+                            {% endfor %}
+                          </select>
+                        </div>
+                      </div>
+                      <div class="col-lg-6">
+                        <div class="form-group">
+                          <label class="form-control-label">Mata Kuliah</label>
+                          <input type="text" name="inputMatkul" class="form-control" placeholder="Mata Kuliah" required>
+                        </div>
+                      </div>
+                      <div class="col-lg-6">
+                        <div class="form-group">
+                          <label class="form-control-label">Kode</label>
+                          <input type="text" name="inputKode" class="form-control" placeholder="Kodel Mata Kuliah" required>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="mt-4">
+                      <button type="submit" id="btn-2" class="btn btn-primary">Tambahkan Data +</button>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        {% endif %}
+
+      <script>
+      (function($){
+        $(function(){
+
+          $("#btn-1").on("click", function(event) {
+            $('#satu').attr('class', 'd-none');
+            $('#dua').attr('class', 'container-fluid mt--6');
+          });
+
+        });
+      })(jQuery);
+    </script>
+
+{% endblock %}
